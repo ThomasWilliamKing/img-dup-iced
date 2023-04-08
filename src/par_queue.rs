@@ -32,7 +32,7 @@ impl<T> ParQueue<T> where T: Send + Sync {
             if mem::size_of::<T>() == 0 {
                 Some(ptr::read(mem::transmute(1)))
             } else {
-                Some(ptr::read(self.ptr.offset(cur as int)))
+                Some(ptr::read(self.ptr.offset(cur as i64)))
             }
         }             
     }

@@ -17,7 +17,9 @@ use std::io::Result;
 use std::thread::Thread;
 
 use std::path::Path;
-use core::ops::Receiver;
+use std::sync::mpsc::Receiver; 
+
+use std::slice::range;
 
 pub struct Results {
     pub total: Total,

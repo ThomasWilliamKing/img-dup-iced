@@ -278,7 +278,7 @@ fn json_arg(args: &Matches, arg: &str, default: JsonSettings) -> JsonSettings {
     }
 }
 
-fn print_help_and_exit(opts: &[Options::OptGroup]) {
+fn print_help_and_exit(opts: &[<Options as Example>::OptGroup]) {
     println!("{}", Options::usage("Duplicate Image Finder", opts));
     super::exit();
 }

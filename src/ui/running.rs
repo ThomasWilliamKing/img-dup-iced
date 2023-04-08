@@ -250,7 +250,7 @@ fn receive_images(img_rx: Receiver<TimedImageResult>, settings: ProgramSettings,
 -> Receiver<Message> {
     let (status_tx, status_rx) = channel();
     
-    Thread::spawn(move |:| {        
+    Thread::spawn(move || {        
         let mut unique_images = Vec::new();
         let mut errors = Vec::new();
 
