@@ -1,24 +1,24 @@
 use config::{ProgramSettings, JsonSettings};
 use processing::Results;
 
-use serialize::Encodable;
+use rustc_serialize::Encodable;
 
-use serialize::json::Encoder as JsonEncoder;
-use serialize::json::{Json, PrettyEncoder, ToJson};
+use rustc_serialize::json::Encoder as JsonEncoder;
+use rustc_serialize::json::{Json, PrettyEncoder, ToJson};
 
 use std::collections::BTreeMap;
 
 use std::io::fs::File;
-use std::io::stdio::{stdout, StdWriter};
-use std::io::{IoResult, LineBufferedWriter};
+use std::io::{stdout,Write};
+use std::io::{Result, LineBufferedWriter};
 
-pub fn newline_before_after(out: &mut Writer, what: |&mut Writer| -> IoResult<()>) -> IoResult<()> {
+pub fn newline_before_after(out: &mut Writer, what: |&mut Writer| -> Result<()>) -> Result<()> {
     try!(out.write_line(""));
     try!(what(out));
     out.write_line("")
 }
 
-pub fn output_results(settings: &ProgramSettings, results: &Results) -> IoResult<()>{
+pub fn output_results(settings: &ProgramSettings, results: &Results) -> Result<()>{
     let ref mut out_writer = open_output(settings);
 
     if settings.json.is_json() {
@@ -28,7 +28,7 @@ pub fn output_results(settings: &ProgramSettings, results: &Results) -> IoResult
     }
 }
 
-fn json_output(settings: &ProgramSettings, results: &Results, out: &mut Writer) -> IoResult<()> { 
+fn json_output(settings: &ProgramSettings, results: &Results, out: &mut Writer) -> Result<()> { 
     let output = {
         let mut json = BTreeMap::new();
  
@@ -47,7 +47,7 @@ fn json_output(settings: &ProgramSettings, results: &Results, out: &mut Writer) 
     out.write_line("")
 }
 
-fn json_encode(json_config: &JsonSettings, json: Json, out: &mut Writer) -> IoResult<()> {
+fn json_encode(json_config: &JsonSettings, json: Json, out: &mut Writer) -> Result<()> {
     match *json_config {
         JsonSettings::PrettyJson(indent) => { 
             let ref mut encoder = PrettyEncoder::new(out);
@@ -62,7 +62,7 @@ fn json_encode(json_config: &JsonSettings, json: Json, out: &mut Writer) -> IoRe
     }
 }
 
-fn write_output(settings: &ProgramSettings, results: &Results, out: &mut Writer) -> IoResult<()> {
+fn write_output(settings: &ProgramSettings, results: &Results, out: &mut Writer) -> Result<()> {
     try!(out.write_line("img-dup results follow.\nStats:"));
     try!(results.write_info(out));
     try!(out.write_line("\nImages:\n"));
@@ -85,7 +85,7 @@ enum Either<T, U> {
 }
 
 impl<T, U> Writer for Either<T, U> where T: Writer, U: Writer {
-    fn write(&mut self, buf: &[u8]) -> IoResult<()> {
+    fn write(&mut self, buf: &[u8]) -> Result<()> {
         match *self {
             Either::Left(ref mut wrt) => wrt.write(buf),
             Either::Right(ref mut wrt) => wrt.write(buf),
@@ -95,7 +95,7 @@ impl<T, U> Writer for Either<T, U> where T: Writer, U: Writer {
 
 
 /// Test if the outfile is writable by trying to open it in write mode.
-pub fn test_outfile(outfile: &Path) -> IoResult<()> {
+pub fn test_outfile(outfile: &Path) -> Result<()> {
     File::create(outfile).map(|_| ())
 }
 

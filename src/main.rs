@@ -1,20 +1,14 @@
-#![feature(macro_rules, globs, unsafe_destructor, phase)]
+#![feature(unsafe_destructor, phase)]
 
-extern crate getopts;
-extern crate image;
-extern crate img_hash;
-extern crate libc;
-extern crate serialize;
-extern crate time;
-
-use config::{parse_args, ProgramSettings};
-use output::{output_results, test_outfile};
+use config::parse_args;
+use config::ProgramSettings;
+use output::output_results;
+use output::test_outfile;
 use processing::process;
 
 use std::io::util::NullWriter;
 
 use std::os;
-
 macro_rules! json_insert(
     ($map:expr, $key:expr, $val:expr) => (
         $map.insert(::std::borrow::ToOwned::to_owned($key), $val.to_json())
@@ -98,9 +92,9 @@ fn run() {
 
 fn get_output(settings: &ProgramSettings) -> Box<Writer> {
     if settings.silent_stdout() {
-        box NullWriter as Box<Writer> 
+        Box::new(NullWriter) as Box<Writer> 
     } else {
-        box std::io::stdio::stdout() as Box<Writer>
+        Box::new(std::io::stdout())  as Box<Writer>
     }    
 }
 

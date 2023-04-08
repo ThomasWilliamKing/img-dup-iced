@@ -1,11 +1,10 @@
 use image::{
-    mod, 
     ImageResult,
     RgbaImage,
 };
 
 use std::collections::{HashSet, HashMap};
-use std::fmt::{mod, Show, Formatter};
+use std::fmt::{Show, Formatter};
 use std::thread::Thread;
 
 

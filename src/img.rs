@@ -1,9 +1,9 @@
 use img_hash::ImageHash;
 
-use serialize::json::{Json, ToJson};
+use rustc_serialize::json::{Json, ToJson};
 
 use std::collections::BTreeMap;
-use std::io::IoResult;
+use std::io::Result;
 use std::mem;
 use std::path::Path;
 
@@ -72,7 +72,7 @@ impl UniqueImage {
         temp    
     }
 
-    pub fn write_self(&self, out: &mut Writer, relative_to: &Path) -> IoResult<()> {
+    pub fn write_self(&self, out: &mut Writer, relative_to: &Path) -> Result<()> {
         try!(writeln!(out, "Original: ({}x{}) {} ", 
                     self.img.width, self.img.height,
                     self.img.relative_path(relative_to).display()
@@ -126,7 +126,7 @@ impl SimilarImage {
         }
     }
 
-    fn write_self(&self, out: &mut Writer, relative_to: &Path) -> IoResult<()> {
+    fn write_self(&self, out: &mut Writer, relative_to: &Path) -> Result<()> {
         writeln!(out, "[{0:.2}%] ({1}x{2}) {3}",
             self.dist_ratio * 100f32,
             self.img.width, self.img.height,

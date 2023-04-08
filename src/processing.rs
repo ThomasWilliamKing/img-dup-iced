@@ -8,16 +8,15 @@ use image::{DynamicImage, GenericImage, ImageError};
 
 use img_hash::ImageHash;
  
-use serialize::json::{ToJson, Json};
+use rustc_serialize::json::{ToJson, Json};
 
-use time::{Tm, now, precise_time_ns};
+use time::Instant::{precise_time_ns, now, Tm};
 
-use std::ascii::AsciiExt;
-use std::boxed::BoxAny;
+use std::boxed::Box;
 use std::collections::BTreeMap;
-use std::io::IoResult;
-use std::io::fs::PathExtensions;
-use std::rt::unwind::try;
+use std::io::Result;
+// use std::io::fs::PathExtensions;
+// use std::rt::unwind::try;
 use std::thread::Thread;
 
 pub struct Results {
@@ -72,7 +71,7 @@ impl Results {
         Json::Array(errors_json)        
     }
 
-    pub fn write_info(&self, out: &mut Writer) -> IoResult<()> {
+    pub fn write_info(&self, out: &mut Writer) -> Result<()> {
         try!(writeln!(out, "Start time: {}", self.start_time()));
         try!(writeln!(out, "End time: {}", self.end_time()));
         try!(writeln!(out, "Images found: {}", self.total));
@@ -80,7 +79,7 @@ impl Results {
         writeln!(out, "Errors: {}", self.errors.len())
     }
 
-    pub fn write_uniques(&self, out: &mut Writer, relative_to: &Path, dup_only: bool) -> IoResult<()> {
+    pub fn write_uniques(&self, out: &mut Writer, relative_to: &Path, dup_only: bool) -> Result<()> {
         for unique in self.uniques.iter() {
             if dup_only && unique.similars.is_empty() {
                 continue;
@@ -95,7 +94,7 @@ impl Results {
         Ok(())
     }
 
-    pub fn write_errors(&self, out: &mut Writer, relative_to: &Path) -> IoResult<()> {
+    pub fn write_errors(&self, out: &mut Writer, relative_to: &Path) -> Result<()> {
         for error in self.errors.iter() {
             try!(
                 newline_before_after(out, 
@@ -141,7 +140,7 @@ impl ProcessingError {
         Json::Object(json)        
     }
 
-    pub fn write_self(&self, out: &mut Writer, relative_to: &Path) -> IoResult<()> {
+    pub fn write_self(&self, out: &mut Writer, relative_to: &Path) -> Result<()> {
         writeln!(out, "Image: {}\n {}\n", self.relative_path(relative_to).display().to_string(), self.err_msg())
     }
 }
@@ -247,7 +246,7 @@ fn receive_images(rx: Receiver<TimedImageResult>, settings: &ProgramSettings)
     -> (Total, Vec<UniqueImage>, Vec<ProcessingError>){
     let mut unique_images = Vec::new();
     let mut errors = Vec::new();
-    let mut total = 0u;
+    let mut total = 0;
    
     for img_result in rx.iter() {
         match img_result {

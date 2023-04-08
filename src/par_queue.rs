@@ -32,7 +32,7 @@ impl<T> ParQueue<T> where T: Send + Sync {
         
         unsafe { // Adapted from `std::vec::MoveItems::next()` 
             if mem::size_of::<T>() == 0 {
-                Some(ptr::read(mem::transmute(1u)))
+                Some(ptr::read(mem::transmute(1)))
             } else {
                 Some(ptr::read(self.ptr.offset(cur as int)))
             }
@@ -62,7 +62,7 @@ unsafe fn dealloc<T>(ptr: *const T, len: uint) {
     if mem::size_of::<T>() != 0 {
         heap::deallocate(ptr as *mut u8,
                    len * mem::size_of::<T>(),
-                   mem::min_align_of::<T>())
+                   mem::align_of::<T>())
     }
 }
 

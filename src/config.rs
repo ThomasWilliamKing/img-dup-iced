@@ -1,6 +1,6 @@
 use getopts::{OptGroup, optopt, optmulti, optflag, optflagopt, Matches, usage, getopts};
 
-use serialize::json::{ToJson, Json};
+use rustc_serialize::json::{ToJson, Json};
 
 use std::borrow::ToOwned;
 
