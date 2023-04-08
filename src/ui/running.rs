@@ -79,8 +79,8 @@ struct Buffers {
     count: String,
     elapsed: String,
     elapsed_ns: u64,
-    done: uint, 
-    total: uint,
+    done: usize, 
+    total: usize,
     stop: bool,
     slider_cur: f64,
     slider_max: f64,
@@ -187,8 +187,8 @@ fn secs_to_hr_min_sec(total_secs: u64) -> (u64, u8, u8) {
 struct Status {
     avg_load: u64,
     avg_hash: u64,
-    count: uint,
-    errors: uint,
+    count: usize,
+    errors: usize,
 }
 
 
@@ -274,12 +274,12 @@ fn receive_images(img_rx: Receiver<TimedImageResult>, settings: ProgramSettings,
             if status_tx.send_opt(Message::Update(Status {
                 avg_load: total_load / count,
                 avg_hash: total_hash / count,
-                count: count as uint,
+                count: count as usize,
                 errors: errors.len(),
             })).is_err() { return; };
         }
       
-        status_tx.send(Message::Finished(count as uint + errors.len(), unique_images, errors));    
+        status_tx.send(Message::Finished(count as usize + errors.len(), unique_images, errors));    
     }).detach();
     
     status_rx

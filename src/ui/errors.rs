@@ -29,14 +29,14 @@ pub fn show_errors_list(errors: Arc<Vec<ErrorBuf>>) {
 }
 
 struct Buffers {
-    current: uint,
+    current: usize,
     curr_str: String,
-    total: uint,
+    total: usize,
     exit: bool,
 }
 
 impl Buffers {
-    fn new(total: uint) -> Buffers {
+    fn new(total: usize) -> Buffers {
         let mut buf = Buffers {
             current: if total > 0 { 1 } else { 0 },
             curr_str: String::new(),
@@ -69,7 +69,7 @@ impl Buffers {
     }
 
     #[inline]
-    fn idx(&self) -> uint {
+    fn idx(&self) -> usize {
         self.current - 1
     }
 }
@@ -171,7 +171,7 @@ impl ErrorBuf {
     }  
 }
 
-fn lines(parent: &str, line_len: uint) -> Vec<String> {
+fn lines(parent: &str, line_len: usize) -> Vec<String> {
     use std::cmp::min;
     use std::borrow::ToOwned;
 

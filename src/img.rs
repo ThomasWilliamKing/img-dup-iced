@@ -99,7 +99,7 @@ impl UniqueImage {
         Json::Object(json)
     }
 
-    pub fn promote(&mut self, idx: uint) {
+    pub fn promote(&mut self, idx: usize) {
         mem::swap(&mut self.similars[idx].img, &mut self.img);
         for similar in self.similars.iter_mut() {
             let dist_ratio = self.img.hash.dist_ratio(&similar.img.hash);

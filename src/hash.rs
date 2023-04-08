@@ -18,7 +18,7 @@ pub struct ImageHash {
 
 impl ImageHash {
 
-    pub fn dist(&self, other: &ImageHash) -> uint {
+    pub fn dist(&self, other: &ImageHash) -> usize {
         assert!(self.bitv.len() == other.bitv.len(), 
                 "ImageHashes must be the same length for proper comparison!");
 
@@ -37,12 +37,12 @@ impl ImageHash {
         let hash_values: Vec<u8> = temp.pixels().map(|(_, _, x)| x.channel())
             .collect();
 
-        let hash_sq = (hash_size * hash_size) as uint;
+        let hash_sq = (hash_size * hash_size) as usize;
 
-        let mean = hash_values.iter().fold(0u, |b, &a| a as uint + b) 
+        let mean = hash_values.iter().fold(0u, |b, &a| a as usize + b) 
             / hash_sq;
 
-        hash_values.into_iter().map(|x| x as uint >= mean).collect()
+        hash_values.into_iter().map(|x| x as usize >= mean).collect()
     }
 
     fn dct_hash<Img: GenericImage<Rgba<u8>>>(img: &Img, hash_size: u32) -> Bitv {
@@ -57,10 +57,10 @@ impl ImageHash {
             .map(|(_, _, x)| x.channel() as f64).collect();
 
         let dct = dct_2d(hash_values.as_slice(),
-            large_size as uint, large_size as uint);
+            large_size as usize, large_size as usize);
 
-        let original = (large_size as uint, large_size as uint);
-        let new = (hash_size as uint, hash_size as uint);
+        let original = (large_size as usize, large_size as usize);
+        let new = (hash_size as usize, hash_size as usize);
 
         let cropped_dct = crop_dct(dct, original, new);
 
@@ -77,7 +77,7 @@ impl ImageHash {
             ImageHash::dct_hash(img, hash_size)             
         };
 
-        assert!((hash_size * hash_size) as uint == hash.len());
+        assert!((hash_size * hash_size) as usize == hash.len());
 
         ImageHash {
             size: hash_size * hash_size,

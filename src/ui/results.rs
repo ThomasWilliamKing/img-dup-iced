@@ -108,7 +108,7 @@ struct ResultsState {
     current: UniqueImage,
     next: Option<UniqueImage>,
     loader: ImgLoader,
-    compare_select: Option<uint>,
+    compare_select: Option<usize>,
     exit: bool,
     buf: Buffers,
     next_str: String,
@@ -179,17 +179,17 @@ impl ResultsState {
         fmt_next_str(&mut self.next_str, self.done.len(), self.next.is_some());
     }
 
-    fn promote(&mut self, idx: uint) {
+    fn promote(&mut self, idx: usize) {
         self.current.promote(idx);
         mem::swap(&mut self.buf.current, &mut self.buf.compares[idx]); 
     }
 
-	fn delete(&mut self, idx: uint) {
+	fn delete(&mut self, idx: usize) {
 		print_err(fs::unlink(&self.current.similars[idx].img.path));
 		self.remove_compare(idx);
 	}
 
-	fn symlink(&mut self, idx: uint) {
+	fn symlink(&mut self, idx: usize) {
 		{
 			let ref path = self.current.similars[idx].img.path;
 
@@ -201,7 +201,7 @@ impl ResultsState {
 		self.remove_compare(idx);	
 	}
 
-	fn remove_compare(&mut self, idx: uint) {
+	fn remove_compare(&mut self, idx: usize) {
 		self.current.similars.remove(idx);
 		self.buf.compares.remove(idx);
 		self.compare_select = None;
@@ -230,7 +230,7 @@ impl ResultsState {
 }
 
 #[inline]
-fn fmt_next_str(s: &mut String, remaining: uint, add_one: bool) {
+fn fmt_next_str(s: &mut String, remaining: usize, add_one: bool) {
     s.clear();
     write_str!(s, "Next ({} left)", remaining + if add_one { 1 } else { 0 });    
 }
@@ -420,8 +420,8 @@ fn draw_results_ui(
 			}
 		}
 	} else {
-		const COLS: uint = 5;
-		const ROWS: uint = 5;
+		const COLS: usize = 5;
+		const ROWS: usize = 5;
 		const LABEL_SIZE: u32 = 12;
 
 		uic.widget_matrix(COLS, ROWS)
@@ -521,7 +521,7 @@ impl ImageBuf {
     }  
 }
 
-fn truncate_name(path: &Path, len: uint) -> String {
+fn truncate_name(path: &Path, len: usize) -> String {
 	const TRUNC_STR: &'static str = "[..]";
 
 	let ext = path.extension_str().unwrap_or("");

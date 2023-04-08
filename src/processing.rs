@@ -1,10 +1,9 @@
-use config::{ProgramSettings, HashSettings};
-use img::{Image, UniqueImage};
-use output::newline_before_after;
-use par_queue::ParQueue;
+use crate::config::{ProgramSettings, HashSettings};
+use crate::img::{Image, UniqueImage};
+use crate::par_queue::ParQueue;
 
 use image;
-use image::{DynamicImage, GenericImage, ImageError};
+use image::{DynamicImage, ImageError};
 
 use img_hash::ImageHash;
  
@@ -15,8 +14,6 @@ use time::Instant::{precise_time_ns, now, Tm};
 use std::boxed::Box;
 use std::collections::BTreeMap;
 use std::io::Result;
-// use std::io::fs::PathExtensions;
-// use std::rt::unwind::try;
 use std::thread::Thread;
 
 pub struct Results {
@@ -153,7 +150,7 @@ pub type ImageResult = Result<Image, ProcessingError>;
 
 pub type TimedImageResult = Result<(Image, LoadTime, HashTime), ProcessingError>;
 
-pub type Total = uint;
+pub type Total = usize;
 
 pub fn process(settings: &ProgramSettings, paths: Vec<Path>) -> Results {
     let start_time = now();

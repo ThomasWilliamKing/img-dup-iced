@@ -2,12 +2,10 @@ use std::{mem, ptr};
 use std::rt::heap;
 use std::sync::atomic::{AtomicUint, Ordering};
 use std::sync::Arc;
-
-
 pub struct ParQueue<T> where T: Send + Sync {
     ptr: *const T,
-    len: uint,
-    cap: uint,
+    len: usize,
+    cap: usize,
     cur: AtomicUint,    
 }
 
@@ -58,7 +56,7 @@ impl<T> Drop for ParQueue<T> where T: Send + Sync {
 
 // Copied from `std::vec` source
 #[inline]
-unsafe fn dealloc<T>(ptr: *const T, len: uint) {
+unsafe fn dealloc<T>(ptr: *const T, len: usize) {
     if mem::size_of::<T>() != 0 {
         heap::deallocate(ptr as *mut u8,
                    len * mem::size_of::<T>(),
