@@ -12,6 +12,8 @@ use std::io::fs::File;
 use std::io::{stdout,Write};
 use std::io::{Result, LineBufferedWriter};
 
+use std::path::Path;
+
 pub fn newline_before_after(out: &mut Writer, what: |&mut Writer| -> Result<()>) -> Result<()> {
     try!(out.write_line(""));
     try!(what(out));

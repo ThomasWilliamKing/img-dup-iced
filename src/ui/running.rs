@@ -3,7 +3,7 @@ use ui::dialogs;
 
 use config::ProgramSettings;
 use img::UniqueImage;
-use processing::{mod, TimedImageResult, ProcessingError, Total};
+use processing::{/*mod, */TimedImageResult, ProcessingError, Total};
 
 use std::default::Default;
 

@@ -16,6 +16,9 @@ use std::collections::BTreeMap;
 use std::io::Result;
 use std::thread::Thread;
 
+use std::path::Path;
+use core::ops::Receiver;
+
 pub struct Results {
     pub total: Total,
     pub start_time: Tm,

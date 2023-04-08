@@ -76,7 +76,7 @@ impl ConfigState {
 
         if new_threads < 1 { return; }
 
-        self.settings.threads = new_threads as uint;
+        self.settings.threads = new_threads as usize;
         buf.threads.clear();
         write_str!(buf.threads, "{}", self.settings.threads); 
     }

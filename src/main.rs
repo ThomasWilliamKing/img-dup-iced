@@ -1,14 +1,10 @@
-#![feature(unsafe_destructor, phase)]
+// #![feature(unsafe_destructor, phase)]
 
-use config::parse_args;
-use config::ProgramSettings;
-use output::output_results;
+use crate::config::parse_args;
+use crate::config::ProgramSettings;
 use output::test_outfile;
-use processing::process;
+use std::env::args;
 
-use std::io::util::NullWriter;
-
-use std::os;
 macro_rules! json_insert(
     ($map:expr, $key:expr, $val:expr) => (
         $map.insert(::std::borrow::ToOwned::to_owned($key), $val.to_json())
@@ -46,7 +42,7 @@ fn show_gui(_: ProgramSettings) {
 }
 
 fn run() {
-    let args = os::args();
+    let args = args();
 
     let settings = parse_args(args.as_slice());
 
@@ -90,11 +86,11 @@ fn run() {
     output::output_results(&settings, &results).unwrap()   
 }
 
-fn get_output(settings: &ProgramSettings) -> Box<Writer> {
-    if settings.silent_stdout() {
-        Box::new(NullWriter) as Box<Writer> 
-    } else {
+fn get_output<Writer>(settings: &ProgramSettings) -> Box<Writer> {
+    // if settings.silent_stdout() {
+    //     Box::new(NullWriter) as Box<Writer> 
+    // } else {
         Box::new(std::io::stdout())  as Box<Writer>
-    }    
+    // }    
 }
 
