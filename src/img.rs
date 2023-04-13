@@ -7,7 +7,7 @@ use std::io::Result;
 use std::mem;
 use std::path::Path;
 
-#[deriving(Eq, PartialEq, Clone)]
+#[derive(Eq, PartialEq, Clone)]
 pub struct Image {
     pub path: Path,
     pub hash: ImageHash,
@@ -110,7 +110,7 @@ impl UniqueImage {
     } 
 }
 
-#[deriving(PartialEq, Clone)]
+#[derive(PartialEq, Clone)]
 pub struct SimilarImage {
    pub img: Image, 
    // Distance from the containing UniqueImage
